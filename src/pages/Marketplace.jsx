@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getAuctions } from "../services/auctionService";
+import AuctionCard from "../components/AuctionCard";
 
 function Marketplace(){
   
@@ -22,10 +23,7 @@ function Marketplace(){
       <h1>Marketplace</h1>
 
       {auctions.map((a) => (
-        <div key={a.id}>
-          <h2>{a.product?.title}</h2>
-          <p>Price: {a.starting_price} </p>
-        </div>
+        <AuctionCard key={a.id} auction={a} />
       ))}
     </>
   )
