@@ -1,40 +1,33 @@
 import { useEffect, useState } from "react";
 import { getAuctions } from "../services/auctionService";
-import { useCounter } from "../context/CounterContext";
 
-function MarketPlace() {
-  ///fin ghadi nhato data dyal api
+function Marketplace(){
+  
   const [auctions, setAuctions] = useState([]);
 
-  //kayekhdam mnin teftah lpage
   useEffect(() => {
-    //api call mn service
     getAuctions()
       .then((res) => {
-        //save data on state wghadi y3awed render
+        console.log("Api data", res.data);
+
         setAuctions(res.data);
       })
       .catch((err) => {
-        console.log(err);
-      });
+        console.error("Error", err);
+      })
   }, []);
 
-    console.log(auctions);
-
-    const { count, increment } = useCounter();
-
   return (
-    <div>
-        <h1>MarketPlace</h1>
-        {auctions.map((auction) => (
-            <div key={auction.id}>
-                <h2>{auction.product.title}</h2>
-                <p>{auction.winner_id}</p>
-            </div>
-        ))}
-        <p>{count}</p>
-        <button onClick={increment}>+</button>
-    </div>
+    <>
+      <h1>Marketplace</h1>
+
+      {auctions.map((a) => (
+        <div key={a.id}>
+          <h2>{a.product?.title}</h2>
+          <p>Price: {a.starting_price} </p>
+        </div>
+      ))}
+    </>
   )
 }
-export default MarketPlace;
+export default Marketplace;
