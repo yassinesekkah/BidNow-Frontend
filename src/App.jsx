@@ -1,6 +1,7 @@
 import Marketplace from './pages/Marketplace';
 import './App.css'
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import AuctionDetails from './pages/AuctionDetails';
 
 function App() {
   
@@ -8,6 +9,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<Marketplace />} />
+        <Route path='/auction/:id' element={<AuctionDetails />} />
       </Routes>
     </BrowserRouter>
   )
