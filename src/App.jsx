@@ -1,14 +1,14 @@
-import { useState } from 'react';
-import Test from './pages/test';
-import MarketPlace from './pages/Marketplace';
-
+import Marketplace from './pages/Marketplace'
 import './App.css'
+import { useState } from 'react'
 
 function App() {
+  //auctions state bach nsayviw fih l auctions 
+  const [auctions, setAuctions] = useState([]);
 
   return (
     <>
-       <Test/>
+       <Marketplace/>
     </>
   )
 }
