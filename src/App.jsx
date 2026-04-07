@@ -1,15 +1,17 @@
-import Marketplace from './pages/Marketplace'
+import Marketplace from './pages/Marketplace';
 import './App.css'
-import { useState } from 'react'
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import AuctionDetails from './pages/AuctionDetails';
 
 function App() {
-  //auctions state bach nsayviw fih l auctions 
-  const [auctions, setAuctions] = useState([]);
-
+  
   return (
-    <>
-       <Marketplace/>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path='/' element={<Marketplace />} />
+        <Route path='/auction/:id' element={<AuctionDetails />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 
