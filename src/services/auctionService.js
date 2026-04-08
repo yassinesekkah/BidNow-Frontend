@@ -6,3 +6,7 @@ export const getAuctions = () => api.get("/auctions");
 export const getAuction = (id) => {
     return api.get(`/auctions/${id}`);
 }
+
+export const placeBid = (id, data) => {
+  return api.post(`/auctions/${id}/bids`, data);
+};
