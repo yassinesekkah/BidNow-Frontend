@@ -22,7 +22,9 @@ function AuctionDetails() {
       });
   }, [id]);
 
-  const handleBid = () => {
+  const handleBid = async (e) => {
+    e.preventDefault();
+
     const token = localStorage.getItem("token");
 
     if(!token){
@@ -37,18 +39,30 @@ function AuctionDetails() {
       return;
     }
 
-    placeBid(id, { amount: bidAmount })
-      .then((res) => {
-        console.log("Bid placed:", res.data);
-      })
-      .catch((err) => {
-        console.error(err);
+    try{
+      const res = await placeBid(id, { amount: bidAmount});
+
+      const NewBid = res.data.bid;
+
+      //khasek tzid tefham 3lach ...
+      setBids((prev) => [NewBid, ...prev]);
+
+      setAuction({
+        ...auction,
+        current_highest_bid: NewBid.amount,
       });
+
+      //reset input
+      setBidAmount("");
+
+    }catch(err){
+      console.log(err);
+      alert("Error placing bid");
+    }
   };
 
   if (!auction) return <p>Loading...</p>;
 
-  if (!auction) return <p>Loading...</p>;
 
   return (
     <div>
