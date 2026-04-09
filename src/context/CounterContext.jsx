@@ -3,7 +3,7 @@ import { createContext, useContext, useState } from "react";
 
 const CounterContext = createContext();
 
-export function CounterProvider({ children }){  //khas tefham wach children predefini
+export function CounterProvider({ children }){  
 
     const [count, setCount] = useState(0);
 

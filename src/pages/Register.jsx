@@ -1,11 +1,11 @@
 import { useContext, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { login } from "../services/authService";
+import { register } from "../services/authService";
 import BidNowLogo from "../components/BidNowLogo";
 
-export default function Login() {
-  const [form, setForm] = useState({ email: "", password: "" });
+export default function Register() {
+  const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
   const { setUser } = useContext(AuthContext);
@@ -18,16 +18,25 @@ export default function Login() {
     try {
       setLoading(true);
 
-      const res = await login({ email: form.email, password: form.password });
+      await register({
+        name: form.name,
+        email: form.email,
+        password: form.password,
+      });
 
-      localStorage.setItem("token", res.data.token);
-      setUser(res.data.user);
-      navigate("/");
+      setMessage({
+        type: "success",
+        text: "Account created successfully! Redirecting to login...",
+      });
+
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
     } catch (err) {
       console.log(err);
       setMessage({
         type: "error",
-        text: "Authentication failed. Please check your details.",
+        text: "Registration failed. Please check your details and try again.",
       });
     } finally {
       setLoading(false);
@@ -52,11 +61,10 @@ export default function Login() {
 
           <div className="space-y-4">
             <h2 className="font-display text-4xl font-bold text-white tracking-tight">
-              Welcome to BidNow
+              Join BidNow
             </h2>
             <p className="text-lg text-white/80 leading-relaxed">
-              Discover unique items, bid with confidence, and win amazing
-              auctions.
+              Create your account and start bidding on exclusive items today.
             </p>
           </div>
 
@@ -77,7 +85,7 @@ export default function Login() {
                   />
                 </svg>
               </div>
-              <span className="text-white/90">Live auctions 24/7</span>
+              <span className="text-white/90">Start bidding instantly</span>
             </div>
             <div className="flex items-center gap-3">
               <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20">
@@ -94,7 +102,7 @@ export default function Login() {
                   />
                 </svg>
               </div>
-              <span className="text-white/90">Secure bidding</span>
+              <span className="text-white/90">Secure & private</span>
             </div>
             <div className="flex items-center gap-3">
               <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20">
@@ -111,7 +119,7 @@ export default function Login() {
                   />
                 </svg>
               </div>
-              <span className="text-white/90">Real-time updates</span>
+              <span className="text-white/90">No hidden fees</span>
             </div>
           </div>
         </div>
@@ -131,25 +139,44 @@ export default function Login() {
           {/* Form Header */}
           <div className="mb-8 space-y-2">
             <h1 className="font-display text-3xl font-bold tracking-tight text-slate-900">
-              Sign In
+              Create Account
             </h1>
             <p className="text-base text-slate-600">
-              Welcome back! Enter your details to access your account.
+              Join our community of bidders. Sign up to get started.
             </p>
           </div>
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Name Field */}
+            <div className="space-y-2">
+              <label
+                htmlFor="register-name"
+                className="block text-sm font-semibold text-slate-700"
+              >
+                Full name
+              </label>
+              <input
+                id="register-name"
+                type="text"
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition-all duration-200 placeholder:text-slate-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10"
+                placeholder="John Doe"
+                required
+              />
+            </div>
+
             {/* Email Field */}
             <div className="space-y-2">
               <label
-                htmlFor="login-email"
+                htmlFor="register-email"
                 className="block text-sm font-semibold text-slate-700"
               >
                 Email address
               </label>
               <input
-                id="login-email"
+                id="register-email"
                 type="email"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
@@ -161,22 +188,14 @@ export default function Login() {
 
             {/* Password Field */}
             <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <label
-                  htmlFor="login-password"
-                  className="block text-sm font-semibold text-slate-700"
-                >
-                  Password
-                </label>
-                <a
-                  href="#"
-                  className="text-xs font-semibold text-indigo-600 hover:text-indigo-700 transition"
-                >
-                  Forgot password?
-                </a>
-              </div>
+              <label
+                htmlFor="register-password"
+                className="block text-sm font-semibold text-slate-700"
+              >
+                Password
+              </label>
               <input
-                id="login-password"
+                id="register-password"
                 type="password"
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
@@ -247,24 +266,24 @@ export default function Login() {
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                     ></path>
                   </svg>
-                  Signing in...
+                  Creating account...
                 </span>
               ) : (
-                <span>Sign In</span>
+                <span>Create Account</span>
               )}
             </button>
           </form>
 
-          {/* Mode Toggle Footer */}
+          {/* Footer */}
           <div className="mt-8 text-center space-y-3">
             <p className="text-sm text-slate-600">
-              Don't have an account?{" "}
+              Already have an account?{" "}
               <button
                 type="button"
-                onClick={() => navigate("/register")}
+                onClick={() => navigate("/login")}
                 className="font-bold text-indigo-600 hover:text-indigo-700 transition outline-none focus:underline"
               >
-                Sign up for free
+                Sign in instead
               </button>
             </p>
           </div>
