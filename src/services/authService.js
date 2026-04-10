@@ -9,5 +9,5 @@ export const register = (data) => {
 };
 
 export const getUser = () => {
-    return api.get("/user");
+    return api.get("/profile");
 };
