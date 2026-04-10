@@ -9,10 +9,19 @@ export const AuthProvider = ({children}) => {
     const [loading, setLoading] = useState(true);
 
     const fetchUser = async () => {
+        const token = localStorage.getItem("token");
+
+        if(!token){
+            setLoading(false);
+            return;
+        }
+
         try{
             const res = await getUser();
             setUser(res.data);
         }catch(err){
+            console.log(err);
+            localStorage.removeItem("token");
             setUser(null);
         }finally{
             setLoading(false);
