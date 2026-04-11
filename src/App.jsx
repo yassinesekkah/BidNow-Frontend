@@ -4,6 +4,7 @@ import AuctionDetails from "./pages/AuctionDetails";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import MainLayout from "./layouts/MainLayout";
+import CreateProduct from "./pages/CreateProduct";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route element={<MainLayout />}>
           <Route path="/" element={<Marketplace />} />
           <Route path="/auctions/:id" element={<AuctionDetails />} />
+          <Route path="/create-product" element={<CreateProduct />} />
         </Route>
       </Routes>
     </BrowserRouter>
