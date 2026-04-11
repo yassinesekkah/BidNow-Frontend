@@ -4,6 +4,8 @@ function BidForm({
   setBidAmount,
   handleBid,
   isAuthenticated,
+  isInvalidBid,
+  
   message,
   isSubmitting,
 }) {
@@ -70,7 +72,7 @@ function BidForm({
 
       <button
         type="submit"
-        disabled={!isAuthenticated || isSubmitting}
+        disabled={!isAuthenticated || isInvalidBid || isSubmitting}
         className="group relative flex w-full items-center justify-center overflow-hidden rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-500 p-3.5 text-sm font-bold text-white shadow-md shadow-indigo-500/20 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-indigo-500/40 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-60"
       >
         {isSubmitting ? (
