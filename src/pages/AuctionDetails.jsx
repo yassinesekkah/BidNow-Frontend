@@ -30,24 +30,64 @@ function AuctionDetails() {
   };
 
   useEffect(() => {
+    let isMounted = true;
+
+    const fetchAuction = async () => {
+      try {
+        const res = await getAuction(id);
+
+        if (!isMounted) return;
+
+        const newAuction = res.data.auction;
+        const newBids = res.data.latest_bids;
+
+        // update auction غير إلا تبدلات
+        setAuction((prev) => {
+          if (
+            prev &&
+            prev.current_highest_bid === newAuction.current_highest_bid &&
+            prev.status === newAuction.status
+          ) {
+            return prev;
+          }
+          return newAuction;
+        });
+
+        // update bids غير إلا تبدلات
+        setBids((prev) => {
+          if (JSON.stringify(prev) === JSON.stringify(newBids)) {
+            return prev;
+          }
+          return newBids;
+        });
+
+        setLoading(false);
+      } catch (err) {
+        console.error(err);
+        if (isMounted) {
+          setError("Unable to load auction details.");
+          setLoading(false);
+        }
+      }
+    };
+
+    // first load
     setLoading(true);
     setError(null);
+    fetchAuction();
 
-    getAuction(id)
-      .then((res) => {
-        setAuction(res.data.auction);
-        setBids(res.data.latest_bids);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        setError("Unable to load auction details.");
-        setLoading(false);
-      });
+    // polling
+    const interval = setInterval(fetchAuction, 3000);
+
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
   }, [id]);
 
   const handleBid = async (e) => {
     e.preventDefault();
+    console.log("CLICKED BID");
     setMessage({ type: "", text: "" });
 
     const token = localStorage.getItem("token");
@@ -59,6 +99,7 @@ function AuctionDetails() {
 
     const currentPrice = auction.current_highest_bid ?? auction.starting_price;
     const numericBid = Number(bidAmount);
+    
 
     if (!numericBid || numericBid <= Number(currentPrice)) {
       setMessage({
@@ -76,10 +117,10 @@ function AuctionDetails() {
 
       setBids((prev) => [newBid, ...prev]);
 
-      setAuction({
-        ...auction,
+      setAuction((prev) => ({
+        ...prev,
         current_highest_bid: newBid.amount,
-      });
+      }));
 
       setBidAmount("");
       setMessage({
@@ -154,6 +195,11 @@ function AuctionDetails() {
       </div>
     );
   }
+
+  const currentPrice =
+    auction?.current_highest_bid ?? auction?.starting_price ?? 0;
+
+  const isInvalidBid = !bidAmount || Number(bidAmount) <= Number(currentPrice);
 
   if (!auction) return null;
 
@@ -248,6 +294,7 @@ function AuctionDetails() {
             setBidAmount={setBidAmount}
             handleBid={handleBid}
             isAuthenticated={Boolean(user)}
+            isInvalidBid={isInvalidBid}
             message={message}
             isSubmitting={isSubmitting}
           />
