@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { createProduct } from "../services/productService";
+import { Navigate, useNavigate } from "react-router-dom";
 
 export default function CreateProduct() {
   const [form, setForm] = useState({
@@ -10,6 +11,7 @@ export default function CreateProduct() {
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,6 +32,12 @@ export default function CreateProduct() {
         description: "",
         image: null,
       });
+
+      const productId = res.data.product.id;
+
+      //next step
+      navigate(`/create-auction/${productId}`);
+
     } catch (err) {
       console.log(err.response.data);
       setMessage("Error creating product");
