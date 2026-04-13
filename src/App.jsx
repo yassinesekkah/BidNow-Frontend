@@ -6,6 +6,7 @@ import Register from "./pages/Register";
 import MainLayout from "./layouts/MainLayout";
 import CreateProduct from "./pages/CreateProduct";
 import ProtectedRoute from "./router/ProtectedRoute";
+import CreateAuction from "./pages/CreateAuction";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/" element={<Marketplace />} />
           <Route path="/auctions/:id" element={<AuctionDetails />} />
           <Route path="/create-product"  element={<ProtectedRoute> <CreateProduct /> </ProtectedRoute>} />
+          <Route path="/create-auction/:productId"  element={<ProtectedRoute> <CreateAuction /> </ProtectedRoute>} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -10,3 +10,7 @@ export const getAuction = (id) => {
 export const placeBid = (id, data) => {
   return api.post(`/auctions/${id}/bids`, data);
 };
+
+export const createAuction = (productId, data) => {
+  return api.post(`/products/${productId}/auction`, data);
+};
