@@ -11,17 +11,22 @@ function AuctionCard({ auction }) {
       maximumFractionDigits: 0,
     }).format(amount || 0);
 
+    console.log(auction.product);
+
   return (
+
+    
     <Link
       to={`/auctions/${auction.id}`}
       className="group block animate-fade-in-up"
       aria-label={`View ${auction.product?.title || "auction"}`}
     >
+      
       <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-md transition-all duration-300 hover:shadow-xl hover:scale-[1.02]">
         <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-indigo-100 via-white to-cyan-100">
           {auction.product?.image_url ? (
             <img
-              src={auction.product.image_url}
+              src={auction.product.image_url} 
               alt={auction.product?.title || "Auction product"}
               className="h-full w-full object-cover transition duration-500 group-hover:scale-110"
             />
@@ -32,6 +37,8 @@ function AuctionCard({ auction }) {
               </span>
             </div>
           )}
+
+
 
           <span
             className={`status-pill absolute right-3 top-3 ${
@@ -58,6 +65,7 @@ function AuctionCard({ auction }) {
           </div>
         </div>
       </div>
+ 
     </Link>
   );
 }

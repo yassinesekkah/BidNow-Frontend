@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import MainLayout from "./layouts/MainLayout";
 import CreateProduct from "./pages/CreateProduct";
+import ProtectedRoute from "./router/ProtectedRoute";
 
 function App() {
   return (
@@ -18,7 +19,7 @@ function App() {
         <Route element={<MainLayout />}>
           <Route path="/" element={<Marketplace />} />
           <Route path="/auctions/:id" element={<AuctionDetails />} />
-          <Route path="/create-product" element={<CreateProduct />} />
+          <Route path="/create-product"  element={<ProtectedRoute> <CreateProduct /> </ProtectedRoute>} />
         </Route>
       </Routes>
     </BrowserRouter>

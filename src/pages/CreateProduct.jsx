@@ -31,7 +31,7 @@ export default function CreateProduct() {
         image: null,
       });
     } catch (err) {
-      console.log(err);
+      console.log(err.response.data);
       setMessage("Error creating product");
     } finally {
       setLoading(false);
