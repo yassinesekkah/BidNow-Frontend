@@ -41,7 +41,7 @@ function AuctionDetails() {
         const newAuction = res.data.auction;
         const newBids = res.data.latest_bids;
 
-        // update auction غير إلا تبدلات
+
         setAuction((prev) => {
           if (
             prev &&
@@ -53,7 +53,7 @@ function AuctionDetails() {
           return newAuction;
         });
 
-        // update bids غير إلا تبدلات
+        
         setBids((prev) => {
           if (JSON.stringify(prev) === JSON.stringify(newBids)) {
             return prev;
