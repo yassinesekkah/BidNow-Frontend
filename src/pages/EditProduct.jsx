@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getProductById, updateProduct } from "../services/productService";
+import { getCategories } from "../services/categoryService";
 
 export default function EditProduct() {
   //use params kanjibo biha mn url
@@ -13,10 +14,12 @@ export default function EditProduct() {
     title: "",
     description: "",
     image: null,
+    category_id: "",
   });
 
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
+  const [categories, setCategories] = useState([]);
 
   //fetch product
   useEffect(() => {
@@ -28,6 +31,7 @@ export default function EditProduct() {
           title: res.data.title,
           description: res.data.description,
           image: null,
+          category_id: res.data.category_id,
         });
       } catch (err) {
         console.log(err);
@@ -39,6 +43,18 @@ export default function EditProduct() {
     fetchProduct();
   }, [id]);
 
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await getCategories();
+        setCategories(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchCategories();
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -48,16 +64,18 @@ export default function EditProduct() {
       const formData = new FormData();
       formData.append("title", form.title);
       formData.append("description", form.description);
+      formData.append("category_id", form.category_id);
 
       if (form.image) {
         formData.append("image", form.image);
       }
+      formData.append("_method", "PUT");
 
       await updateProduct(id, formData);
 
       navigate("/my-products");
     } catch (err) {
-      console.log(err);
+      console.log(err.response.data); 
     } finally {
       setUpdating(false);
     }
@@ -110,6 +128,29 @@ export default function EditProduct() {
                 rows={4}
                 className="w-full rounded-lg border border-slate-300 px-4 py-3 text-sm outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition"
               />
+            </div>
+
+            {/* Categories */}
+            <div className="space-y-2">
+              <label className="text-sm font-semibold text-slate-700">
+                Category
+              </label>
+
+              <select
+                value={form.category_id}
+                onChange={(e) =>
+                  setForm({ ...form, category_id: e.target.value })
+                }
+                className="w-full rounded-lg border border-slate-300 px-4 py-3 text-sm outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition"
+              >
+                <option value="">Select category</option>
+
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
             </div>
 
             {/* Image Upload */}
