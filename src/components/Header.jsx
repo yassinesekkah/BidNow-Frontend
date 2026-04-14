@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import BidNowLogo from "./BidNowLogo";
@@ -6,6 +6,20 @@ import BidNowLogo from "./BidNowLogo";
 function Header() {
   const { user, setUser, loading } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  const [open, setOpen] = useState(false);
+  const menuRef = useRef();
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -39,60 +53,102 @@ function Header() {
           />
         </div>
 
-        {/* Auth Section */}
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+        <div className="flex items-center gap-3">
           {!loading && !user && (
             <>
               <Link
                 to="/login"
-                className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition duration-200 hover:border-slate-300 hover:bg-slate-50"
+                className="text-sm font-medium text-slate-600 hover:text-indigo-600"
               >
-                Sign In
+                Sign in
               </Link>
               <Link
                 to="/register"
-                className="hidden sm:inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-500 px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-indigo-500/20 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-indigo-500/40"
+                className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
               >
-                Register
+                Get started
               </Link>
             </>
           )}
 
           {!loading && user && (
-            <>
-              <div className="hidden md:flex items-center gap-3">
-                <div className="rounded-lg bg-indigo-100 px-3 py-1.5">
-                  <span className="text-sm font-semibold text-indigo-700">
-                    {user.name || user.email || "User"}
-                  </span>
+            <div ref={menuRef} className="relative inline-block">
+              {/* Button */}
+              <button
+                onClick={() => setOpen(!open)}
+                className="flex items-center gap-2 rounded-lg border px-3 py-2 bg-white hover:bg-slate-50 transition"
+              >
+                <div className="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold">
+                  {user.name?.charAt(0).toUpperCase()}
                 </div>
+
+                <span className="hidden sm:block text-sm font-medium">
+                  {user.name || "User"}
+                </span>
+
+                {/* Arrow */}
+                <svg
+                  className={`h-4 w-4 transition-transform duration-200 ${
+                    open ? "rotate-180" : ""
+                  }`}
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+
+              {/* Dropdown */}
+              <div
+                className={`
+    absolute right-0 top-full min-w-full
+    rounded-b-xl border border-t-0 bg-white shadow-lg overflow-hidden
+    transition-all duration-200 ease-out
+    ${
+      open
+        ? "opacity-100 visible translate-y-0 scale-100"
+        : "opacity-0 invisible translate-y-1 scale-95"
+    }
+  `}
+              >
+                <Link
+                  to="/create-product"
+                  className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                  onClick={() => setOpen(false)}
+                >
+                  Sell Product
+                </Link>
+
+                {user?.role === "admin" && (
+                  <Link
+                    to="/admin"
+                    className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                    onClick={() => setOpen(false)}
+                  >
+                    Admin Panel
+                  </Link>
+                )}
+
+                <div className="border-t"></div>
+
                 <button
-                  type="button"
-                  onClick={handleLogout}
-                  className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition duration-200 hover:border-slate-300 hover:bg-slate-50"
+                  onClick={() => {
+                    handleLogout();
+                    setOpen(false);
+                  }}
+                  className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50"
                 >
                   Logout
                 </button>
               </div>
-              <button
-                type="button"
-                onClick={handleLogout}
-                className="md:hidden inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 transition duration-200 hover:bg-slate-50"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  className="h-5 w-5"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M16.5 3.75a1.5 1.5 0 011.5 1.5v13.5a1.5 1.5 0 01-1.5 1.5H7.5a1.5 1.5 0 01-1.5-1.5V5.25a1.5 1.5 0 011.5-1.5h9zm-11.25 11.25a.75.75 0 00-1.5 0v2.25H2.25a.75.75 0 000 1.5h1.5v1.5a.75.75 0 001.5 0v-1.5h1.5a.75.75 0 000-1.5h-1.5v-2.25z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </button>
-            </>
+            </div>
           )}
         </div>
       </div>

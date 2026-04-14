@@ -41,7 +41,6 @@ function AuctionDetails() {
         const newAuction = res.data.auction;
         const newBids = res.data.latest_bids;
 
-
         setAuction((prev) => {
           if (
             prev &&
@@ -53,7 +52,6 @@ function AuctionDetails() {
           return newAuction;
         });
 
-        
         setBids((prev) => {
           if (JSON.stringify(prev) === JSON.stringify(newBids)) {
             return prev;
@@ -99,7 +97,6 @@ function AuctionDetails() {
 
     const currentPrice = auction.current_highest_bid ?? auction.starting_price;
     const numericBid = Number(bidAmount);
-    
 
     if (!numericBid || numericBid <= Number(currentPrice)) {
       setMessage({
@@ -208,6 +205,24 @@ function AuctionDetails() {
       <section className="grid gap-8 lg:grid-cols-[1.5fr_1fr]">
         {/* Main Content */}
         <article className="space-y-6 rounded-2xl border border-slate-100 bg-white p-8 shadow-lg animate-fade-in-up">
+          
+          {/* Product Image */}
+          <div className="w-full overflow-hidden rounded-2xl border border-slate-100 bg-slate-50">
+            {auction.product?.image_url ? (
+              <img
+                src={auction.product.image_url}
+                alt={auction.product?.title}
+                className="w-full h-[400px] object-cover transition duration-500 hover:scale-105"
+              />
+            ) : (
+              <div className="flex h-[400px] items-center justify-center">
+                <span className="text-4xl font-bold text-slate-400">
+                  {(auction.product?.title || "P").charAt(0)}
+                </span>
+              </div>
+            )}
+          </div>
+
           {/* Status & Title */}
           <div className="space-y-4">
             <div className="flex items-start justify-between gap-4">
