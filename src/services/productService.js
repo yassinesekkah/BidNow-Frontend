@@ -5,6 +5,7 @@ export const createProduct = (data) => {
 
     formData.append("title", data.title);
     formData.append("description", data.description);
+    formData.append("category_id", data.category_id);
 
     if(data.image){
         formData.append("image", data.image);
@@ -30,7 +31,6 @@ export const getProductById = (id) => {
 }
 
 export const updateProduct = (id, data) => {
-  data.append("_method", "PUT"); 
 
   return api.post(`/products/${id}`, data);
 };

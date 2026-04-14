@@ -9,6 +9,8 @@ import ProtectedRoute from "./router/ProtectedRoute";
 import CreateAuction from "./pages/CreateAuction";
 import MyProducts from "./pages/MyProducts";
 import EditProduct from "./pages/EditProduct";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
@@ -28,6 +30,7 @@ function App() {
           <Route path="/edit-product/:id" element={<ProtectedRoute> <EditProduct /> </ProtectedRoute> } />
         </Route>
       </Routes>
+      <ToastContainer position="top-right" />
     </BrowserRouter>
   );
 }
