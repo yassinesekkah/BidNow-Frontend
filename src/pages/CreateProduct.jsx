@@ -1,17 +1,36 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createProduct } from "../services/productService";
 import { Navigate, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { getCategories } from "../services/categoryService";
 
 export default function CreateProduct() {
+  const [categories, setCategories] = useState([]);
+
   const [form, setForm] = useState({
     title: "",
     description: "",
-    Image: null,
+    category_id: "",
+    image: null,
   });
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await getCategories();
+        setCategories(res.data);
+      } catch (err) {
+        console.log(err);
+        toast.error("Failed to load categories");
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,7 +40,7 @@ export default function CreateProduct() {
       setLoading(true);
 
       const res = await createProduct(form);
-
+      toast.success("Product created successfully");
       setMessage("Product created successfully");
 
       console.log(res.data.product);
@@ -30,6 +49,7 @@ export default function CreateProduct() {
       setForm({
         title: "",
         description: "",
+        category_id: "",
         image: null,
       });
 
@@ -37,9 +57,18 @@ export default function CreateProduct() {
 
       //next step
       navigate(`/create-auction/${productId}`);
-
     } catch (err) {
-      console.log(err.response.data);
+      console.log(err);
+
+      if (err.response) {
+        // Laravel response
+        console.log(err.response.data);
+        toast.error(err.response.data.message || "Server error");
+      } else {
+        // network or unknown error
+        toast.error("Something went wrong");
+      }
+
       setMessage("Error creating product");
     } finally {
       setLoading(false);
@@ -91,6 +120,29 @@ export default function CreateProduct() {
                 rows={4}
                 className="w-full rounded-lg border border-slate-300 px-4 py-3 text-sm outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition"
               />
+            </div>
+
+            {/* Categories */}
+            <div className="space-y-2">
+              <label className="text-sm font-semibold text-slate-700">
+                Category
+              </label>
+
+              <select
+                value={form.category_id}
+                onChange={(e) =>
+                  setForm({ ...form, category_id: e.target.value })
+                }
+                className="w-full rounded-lg border border-slate-300 px-4 py-3 text-sm outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition"
+              >
+                <option value="">Select category</option>
+
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
             </div>
 
             {/* Image Upload */}
