@@ -16,3 +16,21 @@ export const createProduct = (data) => {
         },
     });
 };
+
+export const getMyProducts = () => {
+  return api.get("/my-products");
+};
+
+export const deleteProduct = (id) => {
+  return api.delete(`/products/${id}`);
+};
+
+export const getProductById = (id) => {
+    return api.get(`/products/${id}`);
+}
+
+export const updateProduct = (id, data) => {
+  data.append("_method", "PUT"); 
+
+  return api.post(`/products/${id}`, data);
+};

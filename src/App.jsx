@@ -7,6 +7,8 @@ import MainLayout from "./layouts/MainLayout";
 import CreateProduct from "./pages/CreateProduct";
 import ProtectedRoute from "./router/ProtectedRoute";
 import CreateAuction from "./pages/CreateAuction";
+import MyProducts from "./pages/MyProducts";
+import EditProduct from "./pages/EditProduct";
 
 function App() {
   return (
@@ -20,8 +22,10 @@ function App() {
         <Route element={<MainLayout />}>
           <Route path="/" element={<Marketplace />} />
           <Route path="/auctions/:id" element={<AuctionDetails />} />
+          <Route path="/my-products" element={<ProtectedRoute> <MyProducts /> </ProtectedRoute>} />
           <Route path="/create-product"  element={<ProtectedRoute> <CreateProduct /> </ProtectedRoute>} />
           <Route path="/create-auction/:productId"  element={<ProtectedRoute> <CreateAuction /> </ProtectedRoute>} />
+          <Route path="/edit-product/:id" element={<ProtectedRoute> <EditProduct /> </ProtectedRoute> } />
         </Route>
       </Routes>
     </BrowserRouter>
