@@ -2,18 +2,42 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import BidNowLogo from "./BidNowLogo";
+import { getCategories } from "../services/categoryService";
 
 function Header() {
+  const [categories, setCategories] = useState([]);
+  const mainCategories = categories.slice(0, 4);
+  const otherCategories = categories.slice(4);
+
+  const [catOpen, setCatOpen] = useState(false);
+  const catRef = useRef();
+
   const { user, setUser, loading } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
   const menuRef = useRef();
 
+  //fetch categories
+  useEffect(() => {
+    const fetchCategories = async (e) => {
+      const res = await getCategories();
+      setCategories(res.data);
+    };
+
+    fetchCategories();
+  }, []);
+
   useEffect(() => {
     const handleClickOutside = (e) => {
+      // close user dropdown
       if (menuRef.current && !menuRef.current.contains(e.target)) {
         setOpen(false);
+      }
+
+      // close categories dropdown
+      if (catRef.current && !catRef.current.contains(e.target)) {
+        setCatOpen(false);
       }
     };
 
@@ -40,7 +64,7 @@ function Header() {
         </Link>
 
         {/* Search - Hidden on mobile */}
-        <div className="hidden w-full max-w-sm md:block">
+        {/* <div className="hidden w-full max-w-sm md:block">
           <label htmlFor="market-search" className="sr-only">
             Search auctions
           </label>
@@ -51,6 +75,72 @@ function Header() {
             className="w-full rounded-xl border border-slate-200 bg-slate-50/50 py-2.5 px-4 text-sm text-slate-900 outline-none transition-all duration-200 placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10"
             aria-label="Search auctions"
           />
+        </div> */}
+
+        <div className="flex">
+          <div className="hidden md:flex items-center gap-2">
+            {mainCategories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => navigate(`/?category_id=${cat.id}`)}
+                className="px-3 py-2 text-sm rounded-lg hover:bg-slate-100"
+              >
+                {cat.name}
+              </button>
+            ))}
+          </div>
+
+          <div ref={catRef} className="relative">
+            {/* Button */}
+            <button
+              onClick={() => setCatOpen(!catOpen)}
+              className="flex items-center gap-1 px-3 py-2 rounded-lg border bg-white hover:bg-slate-50 text-sm"
+            >
+              More
+              {/* Arrow */}
+              <svg
+                className={`h-4 w-4 transition-transform duration-200 ${
+                  catOpen ? "rotate-180" : ""
+                }`}
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </button>
+
+            {/* Dropdown */}
+            <div
+              className={`
+      absolute left-0 mt-2 w-48 rounded-xl border bg-white shadow-lg overflow-hidden transition-all
+      ${
+        catOpen
+          ? "opacity-100 visible translate-y-0"
+          : "opacity-0 invisible translate-y-1"
+      }
+    `}
+            >
+              {otherCategories.map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => {
+                    navigate(`/?category_id=${cat.id}`);
+                    setCatOpen(false);
+                  }}
+                  className="block w-full text-left px-4 py-2 text-sm hover:bg-slate-50"
+                >
+                  {cat.name}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
         <div className="flex items-center gap-3">
@@ -118,6 +208,14 @@ function Header() {
     }
   `}
               >
+                <Link
+                  to="/my-products"
+                  className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                  onClick={() => setOpen(false)}
+                >
+                  My Products
+                </Link>
+
                 <Link
                   to="/create-product"
                   className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
