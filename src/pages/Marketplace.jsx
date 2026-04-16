@@ -1,14 +1,21 @@
 import { useEffect, useState } from "react";
 import { getAuctions } from "../services/auctionService";
 import AuctionCard from "../components/AuctionCard";
+import { useSearchParams } from "react-router-dom";
 
 function Marketplace() {
   const [auctions, setAuctions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [searchParams] = useSearchParams();
+  const categoryId = searchParams.get("category_id");
+
   useEffect(() => {
-    getAuctions()
+    setLoading(true);
+    setError(null); 
+
+    getAuctions(categoryId)
       .then((res) => {
         setAuctions(res.data);
         setLoading(false);
@@ -16,9 +23,9 @@ function Marketplace() {
       .catch((err) => {
         setError("Something went wrong");
         setLoading(false);
-        console.error("Error", err);
+        console.error(err);
       });
-  }, []);
+  }, [categoryId]);
 
   if (loading) {
     return (

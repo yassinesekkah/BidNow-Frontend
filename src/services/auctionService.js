@@ -1,6 +1,14 @@
 import api from "./api";
 
-export const getAuctions = () => api.get("/auctions");
+export const getAuctions = (categoryId) => {
+  let url = "/auctions";
+
+  if (categoryId) {
+    url += `?category_id=${categoryId}`;
+  }
+
+  return api.get(url);
+};
 
 ///mnin kaykon 3endna parametre fel path kankhadmo b `` machi l ""
 export const getAuction = (id) => {
