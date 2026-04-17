@@ -1,10 +1,10 @@
 import api from "./api";
 
-export const getAuctions = (categoryId, search) => {
-  let url = "/auctions?";
+export const getAuctions = (categoryId, search, page = 1) => {
+  let url = `/auctions?page=${page}`;
 
-  if (categoryId) url += `category_id=${categoryId}&`;
-  if (search) url += `search=${search}`;
+  if (categoryId) url += `&category_id=${categoryId}`;
+  if (search) url += `&search=${search}`;
 
   return api.get(url);
 };

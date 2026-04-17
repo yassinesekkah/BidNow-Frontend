@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import BidNowLogo from "./BidNowLogo";
 import { getCategories } from "../services/categoryService";
@@ -17,6 +17,9 @@ function Header() {
 
   const [open, setOpen] = useState(false);
   const menuRef = useRef();
+
+  const [searchParams] = useSearchParams();
+  const activeCategory = searchParams.get("category_id");
 
   //fetch categories
   useEffect(() => {
@@ -79,15 +82,23 @@ function Header() {
 
         <div className="flex">
           <div className="hidden md:flex items-center gap-2">
-            {mainCategories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => navigate(`/?category_id=${cat.id}`)}
-                className="px-3 py-2 text-sm rounded-lg hover:bg-slate-100"
-              >
-                {cat.name}
-              </button>
-            ))}
+            {mainCategories.map((cat) => {
+              const isActive = activeCategory == cat.id;
+
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => navigate(`/?category_id=${cat.id}`)}
+                  className={`px-3 py-2 text-sm rounded-lg transition ${
+                    isActive
+                      ? "bg-indigo-100 text-indigo-600 font-semibold"
+                      : "hover:bg-slate-100 text-slate-700"
+                  }`}
+                >
+                  {cat.name}
+                </button>
+              );
+            })}
           </div>
 
           <div ref={catRef} className="relative">
