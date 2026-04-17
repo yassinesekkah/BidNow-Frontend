@@ -14,6 +14,9 @@ function Marketplace() {
   const searchQuery = searchParams.get("search");
   const [debouncedSearch, setDebouncedSearch] = useState("");
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [lastPage, setLastPage] = useState(1);
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       setDebouncedSearch(search);
@@ -25,9 +28,11 @@ function Marketplace() {
     setLoading(true);
     setError(null);
 
-    getAuctions(categoryId, debouncedSearch)
+    getAuctions(categoryId, debouncedSearch, currentPage)
       .then((res) => {
-        setAuctions(res.data);
+        setAuctions(res.data.data);
+        setCurrentPage(res.data.current_page);
+        setLastPage(res.data.last_page);
         setLoading(false);
       })
       .catch((err) => {
@@ -35,7 +40,7 @@ function Marketplace() {
         setLoading(false);
         console.error(err);
       });
-  }, [categoryId, debouncedSearch]);
+  }, [categoryId, debouncedSearch, currentPage]);
 
   useEffect(() => {
     const params = {};
@@ -137,29 +142,76 @@ function Marketplace() {
       </div>
 
       {/* Auctions Grid */}
-      {auctions.length === 0 ? (
-        <div className="rounded-2xl border border-slate-200 bg-white px-8 py-16 text-center shadow-md">
-          <div className="space-y-2">
+      {loading ? (
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {[...Array(8)].map((_, i) => (
+            <div
+              key={i}
+              className="h-40 rounded-xl bg-slate-200 animate-pulse"
+            />
+          ))}
+        </div>
+      ) : auctions.length === 0 ? (
+        <div className="text-center py-10 text-slate-500">
+          <div className="text-center py-12 space-y-2">
             <p className="text-lg font-semibold text-slate-600">
-              No auctions available right now
+              {search
+                ? `No results found for "${search}"`
+                : "No auctions available"}
             </p>
-            <p className="text-sm text-slate-500">
-              Check back soon for new opportunities
-            </p>
+
+            {search && (
+              <button
+                onClick={() => setSearch("")}
+                className="text-sm text-indigo-600 hover:underline"
+              >
+                Clear search
+              </button>
+            )}
           </div>
         </div>
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {loading
-            ? [...Array(8)].map((_, i) => (
-                <div
-                  key={i}
-                  className="h-40 rounded-xl bg-slate-200 animate-pulse"
-                />
-              ))
-            : auctions.map((a) => <AuctionCard key={a.id} auction={a} />)}
+          {auctions.map((a) => (
+            // <div className="animate-fade-in">
+            <AuctionCard key={a.id} auction={a} />
+            //</div>
+          ))}
         </div>
       )}
+
+      <div className="flex items-center justify-center gap-4 mt-8">
+        {/* Prev */}
+        <button
+          onClick={() => setCurrentPage((p) => p - 1)}
+          disabled={currentPage === 1}
+          className={`px-4 py-2 rounded-lg border text-sm ${
+            currentPage === 1
+              ? "opacity-50 cursor-not-allowed"
+              : "hover:bg-slate-100"
+          }`}
+        >
+          ← Prev
+        </button>
+
+        {/* Page Info */}
+        <span className="text-sm text-slate-600">
+          Page {currentPage} / {lastPage}
+        </span>
+
+        {/* Next */}
+        <button
+          onClick={() => setCurrentPage((p) => p + 1)}
+          disabled={currentPage === lastPage}
+          className={`px-4 py-2 rounded-lg border text-sm ${
+            currentPage === lastPage
+              ? "opacity-50 cursor-not-allowed"
+              : "hover:bg-slate-100"
+          }`}
+        >
+          Next →
+        </button>
+      </div>
     </section>
   );
 }
