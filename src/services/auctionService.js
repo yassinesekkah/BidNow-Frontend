@@ -21,3 +21,7 @@ export const placeBid = (id, data) => {
 export const createAuction = (productId, data) => {
   return api.post(`/products/${productId}/auction`, data);
 };
+
+export const getMyBids = () => {
+  return api.get("/my-bids");
+};
