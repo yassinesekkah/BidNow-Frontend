@@ -245,6 +245,14 @@ function Header() {
                   </Link>
                 )}
 
+                <Link
+                  to="/my-bids"
+                  className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                  onClick={() => setOpen(false)}
+                >
+                  My Bids
+                </Link>
+
                 <div className="border-t"></div>
 
                 <button
