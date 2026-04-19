@@ -17,6 +17,7 @@ function AuctionDetails() {
   const [message, setMessage] = useState({ type: "", text: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+
   const formatPrice = (amount) =>
     new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -205,7 +206,6 @@ function AuctionDetails() {
       <section className="grid gap-8 lg:grid-cols-[1.5fr_1fr]">
         {/* Main Content */}
         <article className="space-y-6 rounded-2xl border border-slate-100 bg-white p-8 shadow-lg animate-fade-in-up">
-          
           {/* Product Image */}
           <div className="w-full overflow-hidden rounded-2xl border border-slate-100 bg-slate-50">
             {auction.product?.image_url ? (
