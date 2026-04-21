@@ -1,10 +1,13 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import { Link, useNavigate } from "react-router-dom";
 
 function UserDropdown() {
-  const { user, logout, loading } = useContext(AuthContext);
+  const { user, loading } = useContext(AuthContext);
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef(null);
+
+  const navigate = useNavigate();
 
   // click outside
   useEffect(() => {
@@ -30,7 +33,7 @@ function UserDropdown() {
                   </div>
 
                   <span className="hidden sm:block text-sm font-medium">
-                    {user.name || "User"}
+                    {user?.name || "User"}
                   </span>
 
                   {/* Arrow */}
