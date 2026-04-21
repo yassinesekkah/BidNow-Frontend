@@ -1,31 +1,14 @@
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getNotifications, markAsRead } from "../../services/notificationService";
+import { useContext } from "react";
+import { NotificationContext } from "../../context/NotificationContext";
 
 function NotificationBell() {
-  const [notifications, setNotifications] = useState([]);
+  const { notifications, unreadCount, markNotificationAsRead } =
+    useContext(NotificationContext);
   const [notifOpen, setNotifOpen] = useState(false);
   const notifRef = useRef(null);
   const navigate = useNavigate();
-
-  const unreadCount = notifications.filter((n) => !n.is_read).length;
-
-  ///fetch notification
-  useEffect(() => {
-    const fetchNotifications = () => {
-      getNotifications()
-        .then((res) => {
-          setNotifications(res.data.data || res.data);
-        })
-        .catch((err) => console.error(err));
-    };
-
-    fetchNotifications();
-
-    const interval = setInterval(fetchNotifications, 5000);
-
-    return () => clearInterval(interval);
-  }, []);
 
   // click outside
   useEffect(() => {
@@ -41,11 +24,7 @@ function NotificationBell() {
 
   ///notifications mark as read
   const handleMarkAsRead = async (id) => {
-    await markAsRead(id);
-
-    // 👇 refresh notifications
-    const res = await getNotifications();
-    setNotifications(res.data.data || res.data);
+    await markNotificationAsRead(id);
   };
 
   return (
@@ -91,7 +70,6 @@ function NotificationBell() {
               <div
                 key={n.id}
                 onClick={() => {
-                    console.log(n.auction_id);
                   if (n.auction_id) {
                     navigate(`/auctions/${n.auction_id}`);
                   }
@@ -112,4 +90,4 @@ function NotificationBell() {
   );
 }
 
-export default NotificationBell;
+export default memo(NotificationBell);

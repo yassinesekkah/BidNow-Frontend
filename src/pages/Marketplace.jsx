@@ -4,14 +4,14 @@ import AuctionCard from "../components/AuctionCard";
 import { useSearchParams } from "react-router-dom";
 
 function Marketplace() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const categoryId = searchParams.get("category_id");
+  const searchQuery = searchParams.get("search") || "";
+
   const [auctions, setAuctions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [search, setSearch] = useState("");
-
-  const [searchParams, setSearchParams] = useSearchParams();
-  const categoryId = searchParams.get("category_id");
-  const searchQuery = searchParams.get("search");
+  const [search, setSearch] = useState(searchQuery);
   const [debouncedSearch, setDebouncedSearch] = useState("");
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -31,7 +31,7 @@ function Marketplace() {
     getAuctions(categoryId, debouncedSearch, currentPage)
       .then((res) => {
         setAuctions(res.data.data);
-        setCurrentPage(res.data.current_page);
+        // setCurrentPage(res.data.current_page);
         setLastPage(res.data.last_page);
         setLoading(false);
       })
@@ -46,10 +46,14 @@ function Marketplace() {
     const params = {};
 
     if (categoryId) params.category_id = categoryId;
-    if (debouncedSearch) params.search = debouncedSearch;
 
-    setSearchParams(params);
-  }, [debouncedSearch, categoryId]);
+    const next = new URLSearchParams(params).toString();
+    const current = searchParams.toString();
+
+    if (next !== current) {
+      setSearchParams(params, { replace: true });
+    }
+  }, [categoryId, searchParams, setSearchParams]);
 
   // if (loading) {
   //   return (
