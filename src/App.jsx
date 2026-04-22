@@ -13,7 +13,8 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import MyBids from "./pages/MyBids";
 import Header from "./components/Header";
-import { NotificationProvider } from "./context/NotificationContext";
+import { NotificationProvider } from "./features/notifications/context/NotificationContext";
+
 
 function App() {
   return (
