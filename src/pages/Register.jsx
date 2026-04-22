@@ -1,14 +1,13 @@
-import { useContext, useState } from "react";
-import { AuthContext } from "../context/AuthContext";
+import {  useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { register } from "../services/authService";
 import BidNowLogo from "../components/BidNowLogo";
+import { useAuth } from "../features/auth/hooks/useAuth";
 
 export default function Register() {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
-  const { setUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {

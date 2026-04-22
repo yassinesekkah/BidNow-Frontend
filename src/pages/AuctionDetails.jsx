@@ -4,11 +4,12 @@ import { getAuction } from "../services/auctionService";
 import BidForm from "../components/BidForm";
 import { placeBid } from "../services/auctionService";
 import { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../features/auth/context/AuthContext";
+import { useAuth } from "../features/auth/hooks/useAuth";
 
 function AuctionDetails() {
   const { id } = useParams();
-  const { user } = useContext(AuthContext);
+  const { user } = useAuth();
   const [auction, setAuction] = useState(null);
   const [bids, setBids] = useState([]);
   const [bidAmount, setBidAmount] = useState("");

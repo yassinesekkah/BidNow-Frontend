@@ -1,17 +1,18 @@
-import { createContext, useCallback, useEffect, useMemo, useState } from "react";
-import { getUser } from "../services/authService";
+import { createContext, useEffect, useState, useCallback } from "react";
+import { getUser } from "../../../services/authService";
 
-//hna kandiro l creation dyal context
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(undefined); 
+
   const [loading, setLoading] = useState(true);
 
   const fetchUser = useCallback(async () => {
     const token = localStorage.getItem("token");
 
     if (!token) {
+      setUser(null);
       setLoading(false);
       return;
     }
@@ -32,14 +33,27 @@ export const AuthProvider = ({ children }) => {
     fetchUser();
   }, [fetchUser]);
 
-  const value = useMemo(
-    () => ({ user, setUser, loading, fetchUser }),
-    [user, loading, fetchUser]
-  );
+  //  actions
+  const login = (userData, token) => {
+    localStorage.setItem("token", token);
+    setUser(userData);
+  };
 
+  const logout = () => {
+    localStorage.removeItem("token");
+    setUser(null);
+  };
 
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        login,
+        logout,
+        refetchUser: fetchUser,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -1,38 +1,42 @@
-import { useContext, useState } from "react";
-import { AuthContext } from "../context/AuthContext";
+import {  useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../services/authService";
 import BidNowLogo from "../components/BidNowLogo";
+import { useAuth } from "../features/auth/hooks/useAuth";
 
 export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
-  const { setUser } = useContext(AuthContext);
+  const { login: loginUser } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setMessage({ type: "", text: "" });
+  e.preventDefault();
+  setMessage({ type: "", text: "" });
 
-    try {
-      setLoading(true);
+  try {
+    setLoading(true);
 
-      const res = await login({ email: form.email, password: form.password });
+    const res = await login({ email: form.email, password: form.password });
 
-      localStorage.setItem("token", res.data.token);
-      setUser(res.data.user);
-      navigate("/");
-    } catch (err) {
-      console.log(err);
+    // use AuthContext
+    loginUser(res.data.user, res.data.token);
+
+    navigate("/");
+  } catch (err) {
+    console.log("ERROR:", err);
+
+    if (err.response) {
       setMessage({
         type: "error",
-        text: "Authentication failed. Please check your details.",
+        text: err.response.data?.message || "Authentication failed",
       });
-    } finally {
-      setLoading(false);
     }
-  };
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="min-h-screen w-full flex">
