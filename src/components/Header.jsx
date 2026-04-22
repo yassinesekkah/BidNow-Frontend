@@ -5,7 +5,7 @@ import { getCategories } from "../services/categoryService";
 
 import NotificationBell from "./notifications/NotificationBell";
 import NavbarLinks from "./layout/NavbarLinks";
-import UserSection from "../context/UserSection";
+import { AuthStatus } from "../features/auth";
 
 function Header() {
   const [categories, setCategories] = useState([]);
@@ -60,7 +60,7 @@ function Header() {
         <div className="flex gap-2">
           <div className="flex items-center gap-3">
             {/*UserDropdown call*/}
-            <UserSection />
+            <AuthStatus />
           </div>
 
           {/*notification component call*/}
