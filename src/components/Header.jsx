@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 import BidNowLogo from "./BidNowLogo";
 import { getCategories } from "../services/categoryService";
 
-import NotificationBell from "./notifications/NotificationBell";
 import NavbarLinks from "./layout/NavbarLinks";
 import { AuthStatus } from "../features/auth";
+import { NotificationBell } from "../features/notifications";
 
 function Header() {
   const [categories, setCategories] = useState([]);

@@ -1,11 +1,10 @@
 import { memo, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useContext } from "react";
-import { NotificationContext } from "../../context/NotificationContext";
+import { useNotifications } from "../hooks/useNotifications";
+
 
 function NotificationBell() {
-  const { notifications, unreadCount, markNotificationAsRead } =
-    useContext(NotificationContext);
+  const { notifications, unreadCount, markNotificationAsRead } = useNotifications();
   const [notifOpen, setNotifOpen] = useState(false);
   const notifRef = useRef(null);
   const navigate = useNavigate();

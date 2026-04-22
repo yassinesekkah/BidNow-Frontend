@@ -1,8 +1,12 @@
-import { createContext, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  getNotifications,
-  markAsRead,
-} from "../services/notificationService";
+  createContext,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { getNotifications, markAsRead } from "../services/notificationService";
 
 export const NotificationContext = createContext();
 
@@ -25,9 +29,17 @@ export const NotificationProvider = ({ children }) => {
   }, []);
 
   const markNotificationAsRead = useCallback(async (id) => {
-    await markAsRead(id);
-    await refreshNotifications();
-  }, [refreshNotifications]);
+    // update local state direct
+    setNotifications((prev) =>
+      prev.map((n) => (n.id === id ? { ...n, is_read: true } : n)),
+    );
+
+    try {
+      await markAsRead(id);
+    } catch (err) {
+      console.log(err);
+    }
+  }, []);
 
   useEffect(() => {
     refreshNotifications();
@@ -40,7 +52,7 @@ export const NotificationProvider = ({ children }) => {
 
   const unreadCount = useMemo(
     () => notifications.filter((n) => !n.is_read).length,
-    [notifications]
+    [notifications],
   );
 
   const value = useMemo(
@@ -50,7 +62,7 @@ export const NotificationProvider = ({ children }) => {
       refreshNotifications,
       markNotificationAsRead,
     }),
-    [notifications, unreadCount, refreshNotifications, markNotificationAsRead]
+    [notifications, unreadCount, refreshNotifications, markNotificationAsRead],
   );
 
   return (

@@ -1,6 +1,6 @@
 import {  useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { register } from "../services/authService";
+import { register } from "../features/auth/services/authService";
 import BidNowLogo from "../components/BidNowLogo";
 import { useAuth } from "../features/auth/hooks/useAuth";
 
