@@ -7,6 +7,7 @@ function NavbarLinks({ mainCategories, otherCategories }) {
   const activeCategory = searchParams.get("category_id");
   const [catOpen, setCatOpen] = useState(false);
   const catRef = useRef();
+  
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -47,7 +48,7 @@ function NavbarLinks({ mainCategories, otherCategories }) {
             {/* Button */}
             <button
               onClick={() => setCatOpen(!catOpen)}
-              className="flex items-center gap-1 px-3 py-2 rounded-lg border bg-white hover:bg-slate-50 text-sm"
+              className="hidden md:flex items-center gap-1 px-3 py-2 rounded-lg border bg-white hover:bg-slate-50 text-sm"
             >
               More
               {/* Arrow */}
