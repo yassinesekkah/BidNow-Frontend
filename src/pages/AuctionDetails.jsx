@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getAuction } from "../services/auctionService";
-import BidForm from "../components/BidForm";
-import { placeBid } from "../services/auctionService";
+import { getAuction } from "../features/auctions/services/auctionService";
+import BidForm from "../features/auctions/components/BidForm";
+import { placeBid } from "../features/auctions/services/auctionService";
 import { useContext } from "react";
 import { AuthContext } from "../features/auth/context/AuthContext";
 import { useAuth } from "../features/auth/hooks/useAuth";
