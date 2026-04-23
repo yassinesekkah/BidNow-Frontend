@@ -1,10 +1,11 @@
 import { memo, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import BidNowLogo from "./BidNowLogo";
-import { getCategories } from "../services/categoryService";
-import NavbarLinks from "./layout/NavbarLinks";
-import { AuthStatus } from "../features/auth";
-import { NotificationBell } from "../features/notifications";
+import BidNowLogo from "../BidNowLogo";
+import { getCategories } from "../../services/categoryService";
+import NavbarLinks from "./NavbarLinks";
+import { AuthStatus } from "../../features/auth";
+import { NotificationBell } from "../../features/notifications";
+import MobileMenu from "./MobileMenu";
 
 function Header() {
   const [categories, setCategories] = useState([]);
@@ -118,25 +119,11 @@ function Header() {
 
       {mobileOpen && (
         <>
-          {/* 🔥 Overlay */}
-          <div
-            className="fixed inset-0 bg-black/30 z-40"
-            onClick={() => setMobileOpen(false)}
+          <MobileMenu
+            mobileOpen={mobileOpen}
+            setMobileOpen={setMobileOpen}
+            categories={categories}
           />
-
-          {/* 📱 Mobile Menu */}
-          <div className="md:hidden fixed top-16 left-0 w-full bg-white shadow-lg border-t p-4 space-y-2 z-50">
-            {categories.map((cat) => (
-              <Link
-                key={cat.id}
-                to={`/?category=${cat.id}`}
-                className="block text-sm text-slate-700 hover:bg-slate-50 px-2 py-1 rounded"
-                onClick={() => setMobileOpen(false)}
-              >
-                {cat.name}
-              </Link>
-            ))}
-          </div>
         </>
       )}
     </>
