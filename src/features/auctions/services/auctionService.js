@@ -1,4 +1,4 @@
-import api from "./api";
+import api from "../../../services/api";
 
 export const getAuctions = (categoryId, search, page = 1) => {
   let url = `/auctions?page=${page}`;

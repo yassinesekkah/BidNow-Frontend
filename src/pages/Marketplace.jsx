@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { getAuctions } from "../services/auctionService";
-import AuctionCard from "../components/AuctionCard";
+import { getAuctions } from "../features/auctions/services/auctionService";
+import AuctionCard from "../features/auctions/components/AuctionCard";
 import { useSearchParams } from "react-router-dom";
 
 function Marketplace() {

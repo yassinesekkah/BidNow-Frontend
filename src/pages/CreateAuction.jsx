@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { createAuction } from "../services/auctionService";
+import { createAuction } from "../features/auctions/services/auctionService";
 
 export default function () {
   const { productId } = useParams();

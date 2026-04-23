@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getMyBids } from "../services/auctionService";
+import { getMyBids } from "../features/auctions/services/auctionService";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../features/auth/hooks/useAuth";
 
