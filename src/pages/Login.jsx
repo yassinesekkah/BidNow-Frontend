@@ -1,4 +1,4 @@
-import {  useState } from "react";
+import {  useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../features/auth/services/authService";
 import BidNowLogo from "../components/BidNowLogo";
@@ -8,8 +8,14 @@ export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
-  const { login: loginUser } = useAuth();
+  const { login: loginUser, user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  
+  useEffect(() => {
+    if(!authLoading && user) {
+      navigate("/");
+    }
+  }, [user, authLoading, navigate])
 
   const handleSubmit = async (e) => {
   e.preventDefault();
@@ -37,6 +43,14 @@ export default function Login() {
     setLoading(false);
   }
 };
+
+if (authLoading) {
+  return (
+    <div className="h-screen flex items-center justify-center">
+      <div className="h-10 w-40 animate-pulse bg-slate-200 rounded"></div>
+    </div>
+  );
+}
 
   return (
     <div className="min-h-screen w-full flex">
